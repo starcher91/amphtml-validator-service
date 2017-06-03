@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+    validator:
+        build:
+            context: ./
+            dockerfile: Dockerfile
+        ports:
+            - 80:3000
+            - 9229:9229
+        volumes:
+            - ./server:/var/www/app/server
+        command: 'node --inspect server/index.js'

@@ -1,0 +1,15 @@
+{
+  "name": "amp-validator-service",
+  "version": "1.0.0",
+  "description": "A service that receives a web hook, and validates a list of known amp urls",
+  "main": "server/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Stephen Archer",
+  "license": "MIT",
+  "dependencies": {
+    "amphtml-validator": "^1.0.20",
+    "express": "^4.15.3"
+  }
+}
