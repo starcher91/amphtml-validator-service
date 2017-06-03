@@ -10,4 +10,4 @@ services:
             - 9229:9229
         volumes:
             - ./server:/var/www/app/server
-        command: 'node --inspect server/index.js'
+        command: 'nodemon --inspect server/index.js'

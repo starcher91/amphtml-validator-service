@@ -8,4 +8,6 @@ ADD package.json /var/www/app/package.json
 
 RUN npm install
 
+RUN npm install -g nodemon
+
 ADD ./ /var/www/app
