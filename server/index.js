@@ -2,60 +2,97 @@ const express = require('express');
 const app = express();
 const ampHtmlValidator = require("amphtml-validator");
 const https = require("https");
-let pages = require("./config/amppages.json");
+const request = require("request");
+let config = require("./config.json");
+
+if (!config) {
+    console.log("You need to define a config file for the service to work");
+    throw new Error();
+}
 
 app.get('/', function (req, res) {
     res.send();
-    pages.forEach(function(item, i) {
-        pageRetriever(pages[i], i);
+    config.pages.forEach(function(item, i) {
+        pageRetriever(config.pages[i], i);
     });
 });
 
-var pageRetriever = function (options, i) {
-    var cnetReq = https.get(options, function (cnetRes) {
-        var body = "";
+var pageRetriever = function (page) {
+    request(page, function(error, response, body) {
+        if (error) {
+            console.log(error);
+        }
 
-        let { statusCode } = cnetRes;
-
-        if (statusCode != 200) {
-            res.resume();
+        if (response && response.statusCode != 200) {
             return;
         }
 
-        cnetRes.on('data', function (chunk) {
-            body += chunk;
-        }).on('end', function () {
-            pages[i].body = body;
-            validate(body, i);
-        }).on('error', function (error) {
-            console.log(error);
-        });
+        validate(body, page);
     });
 };
 
-var validate = function (body, i) {
+var validate = function (body, page) {
     ampHtmlValidator.getInstance().then(function (validator) {
         var result = validator.validateString(body);
 
-        var errorText = ""
         if (result.status !== "PASS") {
-            for (var j = 0; j < result.errors.length; j++) {
-                var error = result.errors[j];
-                var msg = 'line ' + error.line + ', col ' + error.col + ': ' + error.message;
-                if (error.specUrl !== null) {
-                    msg += ' (see ' + error.specUrl + ')';
-                }
-                errorText += msg + "\n";
-            }
-        }
-        
-        console.log(pages[i].path + " - " + result.status);
-        if (errorText) {
-            console.log(errorText);
+            sendNotifications(result, page);
         }
     });
 };
 
+var sendNotifications = function(result, page) {
+    let errorText = "Amp Validation error found on <" + page + ">\n";
+    for (let j = 0; j < result.errors.length; j++) {
+        let error = result.errors[j];
+        let msg = 'line ' + error.line + ', col ' + error.col + ': ' + error.message;
+        if (error.specUrl !== null) {
+            msg += ' (see ' + error.specUrl + ')';
+        }
+        errorText += msg + "\n";
+    }
+
+    let post_data = {
+        "text": errorText
+    };
+
+    let slackUrl = config.slackHookUrl;
+    if (slackUrl === "{replaceThis}" || slackUrl === "") {
+        if (process.env.SLACK_HOOK_URL) {
+            slackUrl = process.env.SLACK_HOOK_URL;
+        } else {
+            console.log("Slack URL must be in config file or implemented as an environment variable");
+            return;
+        }
+    }
+
+    let post_options = {
+        url : slackUrl,
+        method: "POST",
+        json: true,
+        body: post_data
+    };
+
+    request(post_options, function(error, response, body) {
+        if (error) {
+            console.log(error);
+        }
+
+        if (response && response.statusCode != 200) {
+            return;
+        }
+    });
+}
+
 app.listen(3000, function () {
     console.log('Example app listening on port 3000!');
+});
+
+app.use(function(error, req, res, next) {
+    if (!error) {
+        next();
+    } else {
+        console.error(error.stack);
+        res.send(500);
+    }
 });
