@@ -5,11 +5,13 @@ If the given url does not return valid amp, then the service sends a webhook to 
 
 ## Config
 
-You will need to create a config.json file that lives in the src directory that will define the pages you are trying to validate.
+You will need to create a config.json file that lives in the src directory.
+Feel free to use config-example.json as an example for you to build off of. 
 
-You can also define the slack url here, or you can use the environment variable `SLACK_HOOK_URL` to specify the slack endpoint to hit.
-
-Feel free to use config-example.json as an example for you to build off of.
+* pages
+    * An array of urls to validate
+* alerts
+    * An array of alerts, which MUST have a type that corresponds to an alert module in the src/alerts folder
 
 ## Local Development
 

@@ -1,5 +1,15 @@
 {
-    "slackHookUrl": "{replaceThis}",
+    "alerts": [
+        {
+            "type": "slack",
+            "url": "{replaceThis}",
+            "post_data" : {
+                "channel": "",
+                "username": "",
+                "icon_emoji": ""
+            }
+        }
+    ],
     "pages": [
         "https://www.cnet.com/google-amp/news/apple-wwdc-developers-google-facebook-microsoft-amazon-ar-ai-siri/?setDevice=mobile",
         "https://www.cnet.com/google-amp/news/apple-wwdc-developers-google-facebook-microsoft-amazon-ar-ai-siri/"
