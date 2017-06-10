@@ -42,44 +42,26 @@ var validate = function (body, page) {
 };
 
 var sendNotifications = function(result, page) {
-    let errorText = "Amp Validation error found on <" + page + ">\n";
-    for (let j = 0; j < result.errors.length; j++) {
-        let error = result.errors[j];
-        let msg = 'line ' + error.line + ', col ' + error.col + ': ' + error.message;
-        if (error.specUrl !== null) {
-            msg += ' (see ' + error.specUrl + ')';
-        }
-        errorText += msg + "\n";
-    }
-
-    let post_data = {
-        "text": errorText
-    };
-
-    let slackUrl = config.slackHookUrl;
-    if (slackUrl === "{replaceThis}" || slackUrl === "") {
-        if (process.env.SLACK_HOOK_URL) {
-            slackUrl = process.env.SLACK_HOOK_URL;
-        } else {
-            console.log("Slack URL must be in config file or implemented as an environment variable");
-            return;
-        }
-    }
-
-    let post_options = {
-        url : slackUrl,
-        method: "POST",
-        json: true,
-        body: post_data
-    };
-
-    request(post_options, function(error, response, body) {
-        if (error) {
-            console.log(error);
+    config.alerts.forEach(function(item, i) {
+        let alert = "";
+        try {
+            alert = require("./alerts/" + item.type)(item, { "page": page });
+        } catch (e) {
+            console.log("Failure requiring alert by type. Does your alert type exist as a module in the alerts directory?");
+            console.log(e);
+            throw e;
         }
 
-        if (response && response.statusCode != 200) {
-            return;
+        if (alert) {
+            request(alert.post_options, function(error, response, body) {
+                if (error) {
+                    console.log(error);
+                }
+
+                if (response && response.statusCode != 200) {
+                    return;
+                }
+            });
         }
     });
 }
