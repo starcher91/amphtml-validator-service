@@ -13,7 +13,10 @@ module.exports = function(alert, data) {
         alert.post_data = {};
     }
 
-    alert.post_data.text = "Amp Validation error found on <" + data.page + ">\n";
+    alert.post_data.text = "";
+    data.results.forEach(function(item, i) {
+        alert.post_data.text += "Amp Validation error found on <" + item.page + ">\n";
+    });
 
     alert.post_options = {
         url : slackUrl,
