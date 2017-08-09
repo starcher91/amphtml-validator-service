@@ -1,12 +1,12 @@
-const express = require('express');
+import * as express from "express";
 const app = express();
-const ampHtmlValidator = require("amphtml-validator");
-const https = require("https");
-const request = require("request");
-let config = require("./config.json");
+import * as ampHtmlValidator from "amphtml-validator";
+import * as request from "request";
+import * as config from "./config";
 let state = {
     validatedCount : 0,
-    validationErrors: []
+    validationErrors: [],
+    validationPasses: []
 };
 
 if (!config) {
@@ -20,6 +20,7 @@ app.get('/', function (req, res) {
     //reset state
     state.validatedCount = 0;
     state.validationErrors = [];
+    state.validationPasses = [];
 
     config.pages.forEach(function(item, i) {
         pageRetriever(config.pages[i]);
@@ -47,10 +48,13 @@ var validate = function (body, page) {
         var result = validator.validateString(body);
 
         if (result.status !== "PASS") {
-            state.validationErrors.push({"result": result, "page": page});
+            state.validationErrors.push({ "result": result, "page": page });
+        } else {
+            state.validationPasses.push({ "result": result, "page": page });
         }
+        
         //validated all pages sent and there are errors, send notifications
-        if (state.validatedCount >= config.pages.length && state.validationErrors.length != 0) {
+        if (state.validationErrors.length != 0 && state.validationErrors.length + state.validationPasses.length == config.pages.length) {
             sendNotifications(state.validationErrors);
         }
     });
@@ -58,7 +62,7 @@ var validate = function (body, page) {
 
 var sendNotifications = function(results) {
     config.alerts.forEach(function(item, i) {
-        let alert = "";
+        let alert = undefined;
         try {
             alert = require("./alerts/" + item.type)(item, { "results": results });
         } catch (e) {
