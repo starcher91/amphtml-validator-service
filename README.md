@@ -5,19 +5,18 @@ If the given url does not return valid amp, then the service sends a webhook to 
 
 ## Config
 
-You will need to create a config.json file that lives in the src directory.
+You will need to create a config.ts file that lives in the src directory.
 
 ### Pages
 An array of urls to validate. Here is an example:
-```json
-{
-    "pages": [
-        "https://www.site.com/amp/article1",
-        "https://www.site.com/amp/article2",
-        "https://www.site.com/amp/article3",
-    ],
-    "alerts" : []
-}
+```javascript
+export var alerts = [];
+
+export var pages = [
+    "https://www.site.com/amp/article1",
+    "https://www.site.com/amp/article2",
+    "https://www.site.com/amp/article3"
+]
 ```
 
 ### Alerts
@@ -32,16 +31,19 @@ The url to send the alert to.
 
 #### Example
 
-```json
-{
-    "pages": [],
-    "alerts": [
-        {
-            "type": "slack",
-            "url": "https://hooks.slack.com/services/blahblahblahblahblah"
-        }
-    ]
-}
+```javascript
+export var alerts = [
+    {
+        "type": "slack",
+        "url": "https://hooks.slack.com/services/blahblahblahblahblah"
+    },
+    {
+        "type": "slack",
+        "url": "https://hooks.slack.com/services/blahblahblahblahblah2"
+    }
+];
+
+export var pages = [];
 ```
 
 ## Local Development

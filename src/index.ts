@@ -3,6 +3,8 @@ const app = express();
 import * as ampHtmlValidator from "amphtml-validator";
 import * as request from "request";
 import * as config from "./config";
+import { AlertFactory } from "./alerts/AlertFactory";
+
 let state = {
     validatedCount : 0,
     validationErrors: [],
@@ -62,14 +64,7 @@ var validate = function (body, page) {
 
 var sendNotifications = function(results) {
     config.alerts.forEach(function(item, i) {
-        let alert = undefined;
-        try {
-            alert = require("./alerts/" + item.type)(item, { "results": results });
-        } catch (e) {
-            console.log("Failure requiring alert by type. Does your alert type exist as a module in the alerts directory?");
-            console.log(e);
-            throw e;
-        }
+        let alert = AlertFactory.getAlert(item, { "results": results });
 
         if (alert) {
             request(alert.post_options, function(error, response, body) {
@@ -78,9 +73,12 @@ var sendNotifications = function(results) {
                 }
 
                 if (response && response.statusCode != 200) {
+                    console.log("Error sending alert. ${response.statusCode}")
                     return;
                 }
             });
+        } else {
+            throw new Error("Failure getting alert for alert url ${item.url}. Is there an alert for that type?")
         }
     });
 }
