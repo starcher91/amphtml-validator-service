@@ -6,12 +6,43 @@ If the given url does not return valid amp, then the service sends a webhook to 
 ## Config
 
 You will need to create a config.json file that lives in the src directory.
-Feel free to use config-example.json as an example for you to build off of. 
 
-* pages
-    * An array of urls to validate
-* alerts
-    * An array of alerts, which MUST have a type that corresponds to an alert module in the src/alerts folder
+### Pages
+An array of urls to validate. Here is an example:
+```json
+{
+    "pages": [
+        "https://www.site.com/amp/article1",
+        "https://www.site.com/amp/article2",
+        "https://www.site.com/amp/article3",
+    ],
+    "alerts" : []
+}
+```
+
+### Alerts
+An array of alerts. This section of the config specifies what to alert and how if the validator finds an issue. 
+For more information on configuring for specific alert types and a full example, see [this folder](docs/alerts)
+
+#### Type (required)
+The type of the alert. This corresponds to any alert type, which can be found as individual modules in the src/alerts folder.
+
+#### URL (required)
+The url to send the alert to.
+
+#### Example
+
+```json
+{
+    "pages": [],
+    "alerts": [
+        {
+            "type": "slack",
+            "url": "https://hooks.slack.com/services/blahblahblahblahblah"
+        }
+    ]
+}
+```
 
 ## Local Development
 
