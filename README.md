@@ -1,7 +1,7 @@
 # Amp HTML Validation Service
 
 This service is a node web service that accepts a webhook, and will go out and validate a given url for amp validity.
-If the given url does not return valid amp, then the service sends a webhook to a slack url of your configuration.
+If the given url does not return valid amp, then the service sends a webhook to a url of your configuration.
 
 ## Config
 
@@ -49,5 +49,5 @@ export var pages = [];
 ## Local Development
 
 * Install Docker and docker-compose
-* Create a config.json from the config-example.json in the same directory
+* Create a config.ts in the src directory
 * Run `docker-compose up`
