@@ -5,19 +5,16 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch Program",
-            "type": "node2",
-            "request": "launch",
-            "program": "${workspaceRoot}/src/index.js",
-            "cwd": "${workspaceRoot}"
-        },
-        {
             "name": "Attach to Process",
-            "type": "node2",
+            "type": "node",
             "request": "attach",
+            "protocol": "inspector",
             "port": 9229,
+            "restart": true,
             "localRoot": "${workspaceRoot}/src",
-            "remoteRoot": "/var/www/app/src"
+            "remoteRoot": "/var/www/app/src",
+            "sourceMaps": true,
+            "outFiles": ["${workspaceRoot}/dist/**/*.js"]
         }
     ]
 }

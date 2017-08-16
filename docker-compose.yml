@@ -6,11 +6,8 @@ services:
             context: ./
             dockerfile: Dockerfile
         ports:
-            - 80:3000
-            - 9229:9229
-        volumes:
-            - ./src:/var/www/app/src
-        command: 'nodemon --inspect src/index.js'
+            - 3000:3000
+        command: 'node src/index.js'
         deploy:
             mode: replicated
             replicas: 1
