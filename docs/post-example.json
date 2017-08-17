@@ -1,0 +1,9 @@
+{
+    "url": "https://www.cnet.com/google-amp/news/apple-wwdc-developers-google-facebook-microsoft-amazon-ar-ai-siri/",
+    "alerts": [
+        {
+            "type": "slack",
+            "url": "{replaceThis}"
+        }
+    ]
+}

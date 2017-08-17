@@ -1,9 +1,22 @@
 import * as express from "express";
+import * as bodyParser from "body-parser";
 import * as config from "./config";
 import { Validator } from "./services/Validator";
 import { Notifier } from "./services/Notifier";
 
 const app = express();
+
+app.use(function(error, req, res, next) {
+    if (!error) {
+        next();
+    } else {
+        console.error(error.stack);
+        res.status(500).send("Error encountered");
+    }
+});
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/", function(req, res) {
     //go ahead and send the response so the requester isn't waiting
@@ -40,15 +53,23 @@ app.get("/", function(req, res) {
     });
 });
 
-app.listen(3000, function () {
-    console.log('Example app listening on port 3000!');
+app.post("/", function(req, res) {
+    //validate inputs
+    if (!req.body.url || !req.body.alerts) {
+        res.status(400).send("You need at least one url and alert specified in POST data to use this endpoint.");
+    }
+
+    //validate url, and send specified alerts
+    let validator = new Validator();
+    validator.validate(req.body.url).then(function(validationResult) {
+        if (validationResult.status !== "PASS") {
+            let notifier = new Notifier();
+            notifier.sendAlerts(req.body.alerts, [{"result": validationResult, "page": req.body.url}]);
+        }
+    });
+    res.send();
 });
 
-app.use(function(error, req, res, next) {
-    if (!error) {
-        next();
-    } else {
-        console.error(error.stack);
-        res.send(500);
-    }
+app.listen(3000, function () {
+    console.log('Example app listening on port 3000!');
 });
