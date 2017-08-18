@@ -19,7 +19,7 @@ This path would be useful for something like an amp validation smoke test.
 ### POST (Request Based)
 
 ```bash
-curl -H "Content-Type: application/json" -d @example.json localhost
+curl -H "Content-Type: application/json" -d @example.json localhost:3000
 ```
 
 With an HTTP POST request to the root URL, the service uses the data POSTed to the URL as the configuration for pages to validate/alerts to send.
