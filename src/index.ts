@@ -1,9 +1,22 @@
 import * as express from "express";
+import * as bodyParser from "body-parser";
 import * as config from "./config";
 import { Validator } from "./services/Validator";
 import { Notifier } from "./services/Notifier";
 
 const app = express();
+
+app.use(function(error, req, res, next) {
+    if (!error) {
+        next();
+    } else {
+        console.error(error.stack);
+        res.status(500).send("Error encountered");
+    }
+});
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/", function(req, res) {
     //go ahead and send the response so the requester isn't waiting
@@ -15,6 +28,22 @@ app.get("/", function(req, res) {
         throw new Error();
     }
 
+    validateAndAlert(config);
+});
+
+app.post("/", function(req, res) {
+    //go ahead and send the response so the requester isn't waiting
+    res.send();
+
+    //validate inputs
+    if (!req.body.pages || !req.body.alerts) {
+        res.status(400).send("You need at least one url and alert specified in POST data to use this endpoint.");
+    }
+
+    validateAndAlert(req.body);
+});
+
+const validateAndAlert = function(config) {
     //set up state
     let state = {
         validationErrors: [],
@@ -38,17 +67,8 @@ app.get("/", function(req, res) {
             }
         });
     });
-});
+}
 
 app.listen(3000, function () {
     console.log('Example app listening on port 3000!');
-});
-
-app.use(function(error, req, res, next) {
-    if (!error) {
-        next();
-    } else {
-        console.error(error.stack);
-        res.send(500);
-    }
 });
