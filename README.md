@@ -71,4 +71,5 @@ export var pages = [];
 
 * Install Docker and docker-compose
 * Create a config.ts in the src directory
+* Run `docker-compose run validator npm run tsc`
 * Run `docker-compose up`
