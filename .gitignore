@@ -1,4 +1,3 @@
 src/config.ts
-docker-compose.override.yml
 node_modules/
 dist/
