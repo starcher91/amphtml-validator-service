@@ -24,7 +24,7 @@ app.get("/", function(req, res) {
 
     //error out if no config setup
     if (!config) {
-        console.log("You need to define a config file for the service to work");
+        console.log("You need to define a config file for the GET endpoint to work");
         throw new Error();
     }
 
