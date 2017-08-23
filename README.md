@@ -9,7 +9,7 @@ There are two ways in which you can specify pages to validate and alerts to send
 ### GET (Config Based)
 
 ```bash
-curl localhost:3000
+curl localhost
 ```
 
 With an http GET request to the root URL, the service parses a pre-configured config.ts file that lives in the src directory, and validates pages/sends alerts as defined in that config file.
@@ -19,7 +19,7 @@ This path would be useful for something like an amp validation smoke test.
 ### POST (Request Based)
 
 ```bash
-curl -H "Content-Type: application/json" -d @example.json localhost:3000
+curl -H "Content-Type: application/json" -d @example.json localhost
 ```
 
 With an HTTP POST request to the root URL, the service uses the data POSTed to the URL as the configuration for pages to validate/alerts to send.

@@ -1,8 +1,17 @@
-export class SlackAlert {
-    post_data: any;
-    post_options: any;
+import { AbstractAlert } from "./AbstractAlert";
 
+export class SlackAlert extends AbstractAlert {
     constructor(alert: any, data: any) {
+        super(alert, data);
+
+        let post_data;
+        
+        if (!alert.post_data) {
+            post_data = {};
+        } else {
+            post_data = alert.post_data;
+        }
+        
         let slackUrl = alert.url;
         if (slackUrl === "{replaceThis}" || slackUrl === "") {
             if (process.env.SLACK_HOOK_URL) {
@@ -13,23 +22,17 @@ export class SlackAlert {
             }
         }
 
-        if (!alert.post_data) {
-            this.post_data = {};
-        } else {
-            this.post_data = alert.post_data;
-        }
-
         let alertText = "";
         data.results.forEach(function(item, i) {
             alertText += "Amp Validation error found on <" + item.page + ">\n";
         });
-        this.post_data.text = alertText;
+        post_data.text = alertText;
 
         this.post_options = {
             url : slackUrl,
             method: "POST",
             json: true,
-            body: this.post_data
+            body: post_data
         };
     }
 }
