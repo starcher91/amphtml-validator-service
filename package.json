@@ -10,14 +10,16 @@
   "author": "Stephen Archer",
   "license": "MIT",
   "dependencies": {
+    "@types/body-parser": "^1.16.5",
+    "@types/express": "^4.0.37",
+    "@types/node": "^8.0.20",
+    "@types/request": "^2.0.2",
+    "@types/request-promise": "^4.1.37",
     "amphtml-validator": "^1.0.20",
     "body-parser": "^1.17.2",
     "express": "^4.15.3",
     "request": "^2.81.0",
-    "request-promise": "^4.2.1"
-  },
-  "devDependencies": {
-    "@types/node": "^8.0.20",
+    "request-promise": "^4.2.1",
     "typescript": "^2.4.2"
   }
 }
