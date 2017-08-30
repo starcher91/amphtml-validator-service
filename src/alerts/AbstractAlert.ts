@@ -9,7 +9,7 @@ export abstract class AbstractAlert {
     constructor(alert: any, data: any) {
     }
 
-    generateAlertMessage(alertConfig: any, data: any) {
+    generateAlertMessage(alertConfig: any, data: any): string {
         let alertText : string = "";
         //if no template is specified, return a basic description of the alert
         if (!alertConfig.template) {
