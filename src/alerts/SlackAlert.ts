@@ -22,11 +22,7 @@ export class SlackAlert extends AbstractAlert {
             }
         }
 
-        let alertText = "";
-        data.results.forEach(function(item, i) {
-            alertText += "Amp Validation error found on <" + item.page + ">\n";
-        });
-        post_data.text = alertText;
+        post_data.text = this.generateAlertMessage(alert, data);
 
         this.post_options = {
             url : slackUrl,

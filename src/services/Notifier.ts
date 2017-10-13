@@ -7,18 +7,13 @@ export class Notifier {
             let alert = AlertFactory.getAlert(item, { "results": results });
 
             if (alert) {
-                rp(alert.post_options).then(function(error, response, body) {
+                rp(alert.post_options).catch(function(error) {
                     if (error) {
-                        console.log(error);
-                    }
-
-                    if (response && response.statusCode != 200) {
-                        console.log("Error sending alert. ${response.statusCode}")
-                        return;
+                        console.log("Error sending alert." + error);
                     }
                 });
             } else {
-                throw new Error("Failure getting alert for alert url ${item.url}. Is there an alert for that type?")
+                throw new Error("Failure getting alert for alert url " + item.url + ". Is there an alert for that type?")
             }
         });
     }
