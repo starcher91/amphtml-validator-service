@@ -4,8 +4,7 @@ services:
     validator:
         command: 'nodemon --inspect dist/index.js'
         volumes:
-            - ./src:/var/www/app/src
-            - ./dist:/var/www/app/dist
+            - ./:/var/www/app/
         ports:
             - 80:3000
             - 9229:9229

@@ -37,7 +37,7 @@ export var pages = [
     "https://www.site.com/amp/article1",
     "https://www.site.com/amp/article2",
     "https://www.site.com/amp/article3"
-]
+];
 ```
 
 ### Alerts
