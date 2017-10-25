@@ -1,3 +1,4 @@
+import * as logger from "winston";
 import { AbstractAlert } from "./AbstractAlert";
 
 export class SlackAlert extends AbstractAlert {
@@ -17,7 +18,7 @@ export class SlackAlert extends AbstractAlert {
             if (process.env.SLACK_HOOK_URL) {
                 slackUrl = process.env.SLACK_HOOK_URL;
             } else {
-                console.log("Slack URL must be in config file or implemented as an environment variable");
+                logger.error("Slack URL must be in config file or implemented as an environment variable");
                 return;
             }
         }

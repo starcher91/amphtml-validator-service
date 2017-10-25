@@ -1,3 +1,4 @@
+import * as logger from "winston";
 import { AbstractAlert } from "./AbstractAlert";
 
 export class GenericAlert extends AbstractAlert{
@@ -8,7 +9,7 @@ export class GenericAlert extends AbstractAlert{
         //if a text property to set the template to is not defined
         //do not generate the template.
         if (!alert.textProperty) {
-            console.log("Generic Alert could not populate text. Consult docs for required fields.");
+            logger.warn("Generic Alert could not populate text. Consult docs for required fields.");
             return;
         }
 

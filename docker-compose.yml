@@ -16,3 +16,5 @@ services:
                 delay: 10s
             restart_policy:
                 condition: on-failure
+        environment:
+            - NODE_ENV=prod

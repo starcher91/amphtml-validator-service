@@ -1,5 +1,7 @@
 import * as express from "express";
 import * as bodyParser from "body-parser";
+import * as logger from "winston";
+
 import * as config from "./config";
 import { Validator } from "./services/Validator";
 import { Notifier } from "./services/Notifier";
@@ -10,7 +12,7 @@ app.use(function(error, req, res, next) {
     if (!error) {
         next();
     } else {
-        console.error(error.stack);
+        logger.error(error.stack);
         res.status(500).send("Error encountered");
     }
 });
@@ -24,8 +26,9 @@ app.get("/", function(req, res) {
 
     //error out if no config setup
     if (!config) {
-        console.log("You need to define a config file for the GET endpoint to work");
-        throw new Error();
+        let errorMessage: string = "You need to define a config file for the GET endpoint to work";
+        logger.error(errorMessage);
+        throw new Error(errorMessage);
     }
 
     validateAndAlert(config);
@@ -37,7 +40,9 @@ app.post("/", function(req, res) {
 
     //validate inputs
     if (!req.body.pages || !req.body.alerts) {
-        res.status(400).send("You need at least one url and alert specified in POST data to use this endpoint.");
+        let errorMessage: string = "You need at least one url and alert specified in POST data to use this endpoint.";
+        logger.error(errorMessage);
+        throw new Error(errorMessage);
     }
 
     validateAndAlert(req.body);
@@ -65,10 +70,17 @@ const validateAndAlert = function(config) {
                 let notifier = new Notifier();
                 notifier.sendAlerts(config.alerts, state.validationErrors);
             }
+        }).catch(function(error) {
+            logger.error(error);
         });
     });
 }
 
 app.listen(3000, function () {
-    console.log('Example app listening on port 3000!');
+    //configure global app logging
+    logger.configure({
+        level: process.env.NODE_ENV == "prod" ? "warn" : "silly",
+        transports: [new logger.transports.Console()]
+    });
+    logger.info("App listening on port 3000");
 });

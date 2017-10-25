@@ -1,4 +1,6 @@
 import * as rp from "request-promise";
+import * as logger from "winston";
+
 import { AlertFactory } from "../alerts/AlertFactory";
 
 export class Notifier {
@@ -9,11 +11,11 @@ export class Notifier {
             if (alert) {
                 rp(alert.post_options).catch(function(error) {
                     if (error) {
-                        console.log("Error sending alert." + error);
+                        logger.error("Error sending alert." + error);
                     }
                 });
             } else {
-                throw new Error("Failure getting alert for alert url " + item.url + ". Is there an alert for that type?")
+                logger.error("Failure getting alert for alert url " + item.url + ". Is there an alert for that type?");
             }
         });
     }
