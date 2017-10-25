@@ -5,7 +5,8 @@
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "tsc": "tsc"
+    "tsc": "tsc",
+    "watch": "tsc --watch"
   },
   "author": "Stephen Archer",
   "license": "MIT",
@@ -16,12 +17,14 @@
     "@types/node": "^8.0.20",
     "@types/request": "^2.0.2",
     "@types/request-promise": "^4.1.37",
+    "@types/winston": "^2.3.6",
     "amphtml-validator": "^1.0.20",
     "body-parser": "^1.17.2",
     "express": "^4.15.3",
     "handlebars": "^4.0.10",
     "request": "^2.81.0",
     "request-promise": "^4.2.1",
-    "typescript": "^2.4.2"
+    "typescript": "^2.4.2",
+    "winston": "^2.4.0"
   }
 }
